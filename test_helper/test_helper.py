@@ -242,8 +242,6 @@ class Test(object):
         if(client.twitter.tweets.count()==client.twitter.tweets.count(q_t)):
             if(client.twitter.users.count()==client.twitter.users.count(q_u)):
                 result = True
-    
-        result = {'created_at': BillGates.created_at, 'last_tweet_text': api.home_timeline(BillGates.id)[0].text}
         cls.assertEquals(True, result, msg, msg_success)
     # Lab 8.2 Ex.5.4
     @classmethod
