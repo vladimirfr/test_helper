@@ -310,6 +310,20 @@ class Test(object):
                 del(i['_id'])
                 result[lang['_id']['lang']].append(i)
         cls.assertEquals(data, result, msg, msg_success)
+	# Lab 8.2 Ex.5.7.0
+    @classmethod
+	def GetTweetsByIDS(cls,ids,client):
+		ids = list(set(ids))
+		result = {}
+		for i in list(client.twitter.tweets.aggregate([
+				{"$match": {"id":{"$in":ids}}},
+				{"$project": {'_id':-1,"id":1,"created_at":1,"text":1}}
+			])):
+			del(i['_id'])
+			t = i.copy()
+			del(t['id'])
+			result[i['id']] = t
+		return result.values()
     # Lab 8.2 Ex.5.7
     @classmethod
     def timeZoneTweets(cls, data, client, msg="", msg_success=""):
@@ -344,6 +358,6 @@ class Test(object):
             t = list(client.twitter.users.aggregate(q))
             if(len(t)):
                 del(t[0]['_id'])
-                t[0]['tweets'] = GetTweetsByIDS(t[0]['tweets'])
+                t[0]['tweets'] = cls.GetTweetsByIDS(t[0]['tweets'],client)
                 result[i['_id']['time_zone']] = t[0]
         cls.assertEquals(data, result, msg, msg_success)
